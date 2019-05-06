@@ -1,4 +1,4 @@
-# find-a-conservation-group
+# Find A Conservation Group
 Simple Mapbox driven location finder to replace current Google maps one:
 https://www.dpaw.wa.gov.au/management/off-reserve-conservation/urban-nature/find-a-conservation-group
 
