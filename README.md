@@ -1,0 +1,2 @@
+# find-a-conservation-group
+Volunteers who care passionately about the environment are vital in managing our natural areas. Community conservation groups protect and manage our bushlands through raising awareness of biodiversity values and of natural areas in their local community. They acquire funding to undertake on-ground works and manage serious threats making a major contribution to protection and restoration of our bushlands.
