@@ -81,6 +81,17 @@ var map = new mapboxgl.Map({
 });
 
 map.on('load', function() {
+	
+    // Add layer below labels
+	var layers = map.getStyle().layers;
+	// Find the index of the first symbol layer in the map style
+	var firstSymbolId;
+		for (var i = 0; i < layers.length; i++) {
+			if (layers[i].type === 'symbol') {
+			firstSymbolId = layers[i].id;
+		break;
+		}
+	}
     map.addLayer({
         id: 'locations',
         type: 'fill',
@@ -96,7 +107,7 @@ map.on('load', function() {
             "fill-color": ['match', ['get', 'GroupTYPE'], 'Friends', '#266093', 'Regional', '#f03b20', /* other */ '#3386c0'],
             "fill-opacity": 0.25
         }
-    });
+    },firstSymbolId);
 
     slider.addEventListener('input', function(e) {
         // Adjust the layers opacity. layer here is arbitrary - this could
