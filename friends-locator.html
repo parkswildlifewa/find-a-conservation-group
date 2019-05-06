@@ -147,6 +147,10 @@ map.on('mouseleave', 'locations', function() {
 // location of the click, with description HTML from its properties.
 map.on('click', 'locations', function(e) {
 
+    // Debug to display data
+    var features = map.queryRenderedFeatures(e.point);
+    console.log(features[0].geometry) 
+	
     new mapboxgl.Popup()
         .setLngLat(e.lngLat)
         .setHTML('<h3>Locations</h3><div id="listings" class="listings">' + e.features.map(function(feature) {
