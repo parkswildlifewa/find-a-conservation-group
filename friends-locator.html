@@ -4,12 +4,12 @@
     <meta charset='utf-8' />
     <title>Find a conservation group</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' />
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Heebo" rel="stylesheet">
 <style>
-body{-webkit-font-smoothing:antialiased;font:400 15px/22px Heebo,'Helvetica Neue',Sans-serif;margin:0}#map{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%}#map,body,html{height:100%;margin:0}.pull-right{float:right}.btn{display:inline-block;margin-bottom:0;font-size:12px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border:1px solid transparent;border-radius:3px;padding:2px 6px}.btn-default{color:#333;background-color:#fff;border-color:#ccc}.btn-default.active,.btn-default:active,.btn-default:focus,.btn-default:hover,.open>.dropdown-toggle.btn-default{color:#333;background-color:#e6e6e6;border-color:#adadad}.btn.active,.btn:active{background-image:none;outline:0;-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,.125);box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}.btn.active:focus,.btn:active:focus,.btn:focus{outline:5px auto 0;outline-offset:-2px}.btn-default.active,.btn-default:active,.open>.dropdown-toggle.btn-default{background-image:none}.pad2{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:20px}.heading{background:#fff;border-bottom:1px solid #eee;min-height:70px;line-height:70px;background-color:#353535;color:#fff;padding:0 10px}.sidebar h2{font-size:22px;font-weight:400;line-height:20px;margin:0;padding:25px 2px}a{color:#404040;text-decoration:none}a:hover{color:#101010}.sidebar .listings{min-width:300px}.listings{height:100%;overflow:auto;padding-bottom:60px}.listings .item{display:block;border-bottom:1px solid #eee;text-decoration:none;padding:10px}.listings .item:last-child{border-bottom:none}.listings .item .title{display:block;color:#4d9de0;font-weight:700}.listings .item .title small{font-weight:400}.listings .item .title:hover,.listings .item.active .title{color:#8cc63f}.listings .item.active{background-color:#f8f8f8}::-webkit-scrollbar{width:3px;height:3px;border-left:0;background:rgba(0,0,0,.1)}::-webkit-scrollbar-track{background:0 0}::-webkit-scrollbar-thumb{background:#4d9de0;border-radius:0}.clearfix{display:block}.clearfix::after{content:'.';display:block;height:0;clear:both;visibility:hidden}.mapboxgl-popup{padding-bottom:50px}.mapboxgl-popup-close-button{margin-top:-10px;color:#fff}.mapboxgl-popup-content{font:400 15px/22px 'Source Sans Pro','Helvetica Neue',Sans-serif;width:250px;max-height:350px;padding:0}.mapboxgl-popup-content-wrapper{padding:1%}.mapboxgl-popup-content h3{background:#4d9de0;color:#fff;display:block;border-radius:3px 3px 0 0;font-weight:700;margin:-15px 0 0;padding:10px}.mapboxgl-popup-content h4{display:block;font-weight:400;margin:0;padding:10px}.mapboxgl-popup-content div{padding:10px}.mapboxgl-container .leaflet-marker-icon{cursor:pointer}.mapboxgl-popup-anchor-top>.mapboxgl-popup-content{margin-top:15px}.mapboxgl-popup-anchor-top>.mapboxgl-popup-tip{border-bottom-color:#4d9de0}#main{position:relative;transition:margin-left .5s;height:100%}#main.active{margin-left:30%}#sidebar.active{width:30%}#selectMenu{z-index:3;position:absolute;bottom:0;left:0;cursor:pointer}.sidebar{height:100%;width:0;position:fixed;z-index:2;top:0;left:0;overflow-x:hidden;transition:.5s}.cmn-toggle-switch{display:block;position:absolute;top:10px;left:10px;overflow:hidden;width:50px;height:50px;font-size:0;text-indent:-9999px;-webkit-appearance:none;-moz-appearance:none;appearance:none;box-shadow:none;border-radius:none;border:none;cursor:pointer;-webkit-transition:background .3s;transition:background .3s;z-index:3;margin:0;padding:0}.cmn-toggle-switch:focus{outline:0}.cmn-toggle-switch span{display:block;position:absolute;top:23px;left:10px;right:10px;height:4px;background:#fff}.cmn-toggle-switch span::after,.cmn-toggle-switch span::before{position:absolute;display:block;left:0;width:100%;height:4px;background-color:#fff;content:""}.cmn-toggle-switch span::before{top:-10px}.cmn-toggle-switch span::after{bottom:-10px}.cmn-toggle-switch__htx{background-color:#353535}.cmn-toggle-switch__htx span{-webkit-transition:background 0 .3s;transition:background 0 .3s}.cmn-toggle-switch__htx span::after,.cmn-toggle-switch__htx span::before{-webkit-transition-duration:.3s .3s;transition-duration:.3s .3s;-webkit-transition-delay:.3s 0;transition-delay:.3s 0}.cmn-toggle-switch__htx span::before{-webkit-transition-property:top,0;transition-property:top,transform}.cmn-toggle-switch__htx span::after{-webkit-transition-property:bottom,0;transition-property:bottom,transform}.cmn-toggle-switch__htx.active{background-color:#000}.cmn-toggle-switch__htx.active span{background:0 0}.cmn-toggle-switch__htx.active span::before{top:0;-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.cmn-toggle-switch__htx.active span::after{bottom:0;-webkit-transform:rotate(-45deg);-ms-transform:rotate(-45deg);transform:rotate(-45deg)}.cmn-toggle-switch__htx.active span::after,.cmn-toggle-switch__htx.active span::before{-webkit-transition-delay:0 .3s;transition-delay:0 .3s}.map-overlay{padding:10px}.map-overlay .map-overlay-inner{background-color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.4);border-radius:3px;margin-bottom:10px;padding:20px}.map-overlay-inner fieldset{border:none;margin:0 0 25px;padding:0}.map-overlay-inner fieldset:last-child{margin:0}.map-overlay-inner select{width:100%}.map-overlay-inner label{display:block;font-weight:700;margin:0 0 5px}.map-overlay-inner button{display:inline-block;width:36px;height:20px;border:none;cursor:pointer}.map-overlay-inner button:focus{outline:0}.map-overlay-inner button:hover{box-shadow:inset 0 0 0 3px rgba(0,0,0,.1)}.map-overlay-inner button{width:35px;margin:4px;height:35px}#swatches{max-width:220px;margin:0 auto;text-align:center}.panel{min-width:300px;margin:0 auto}.slider-arrow{padding:7px;width:10px;float:left;background:#fff;color:#000;text-decoration:none;position:absolute;left:0;bottom:40px;z-index:1}.sidebar{height:100%;display:flex;flex-direction:column}.sidebar-header{flex:0 0 auto;background-color:#dcdcdc}.sidebar-content{flex:1 1 auto;position:relative;overflow-y:auto}.sidebar-footer{flex:0 0 auto;background-color:#dcdcdc}.filter-group{background:#fff;position:absolute;bottom:40px;left:10px;z-index:1;border-radius:4px;width:120px;-moz-box-shadow:0 0 2px rgba(0,0,0,.1);-webkit-box-shadow:0 0 2px rgba(0,0,0,.1);box-shadow:0 0 0 2px rgba(0,0,0,.1)}.filter-group input[type=checkbox]:first-child+label{border-radius:4px 4px 0 0}.filter-group label:last-child{border-radius:0 0 4px 4px;border:none}.filter-group input[type=checkbox]{display:none}.filter-group input[type=checkbox]+label{background-color:#fff;color:#fff;display:block;cursor:pointer;padding:10px;border-bottom:1px solid rgba(256,256,256,.25)}.filter-group input[type=checkbox]+label{background-color:#fff;color:#fff;text-transform:capitalize}.filter-group input[type=checkbox]+label:hover,.filter-group input[type=checkbox]:checked+label{background-color:#4ea0da;color:#fff}.filter-group input[type=checkbox]:checked+label:before{content:'✔';margin-right:5px}.filter-group input[type=checkbox].filter-friends+label{background-color:#266093}.filter-group input[type=checkbox].filter-regional+label{background-color:#f03b20}#slider{width:100%}@media screen and max-width 767px{#main.active{margin-left:80%}#sidebar.active{width:80%}.sidebar h2{font-size:26px}.sidebar a{font-size:14px}}
+body{-webkit-font-smoothing:antialiased;font:400 15px/22px Heebo,'Helvetica Neue',Sans-serif;margin:0}#map{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%}#map,body,html{height:100%;margin:0}.pull-right{float:right}.btn{display:inline-block;margin-bottom:0;font-size:12px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border:1px solid transparent;border-radius:3px;padding:2px 6px}.btn-default{color:#333;background-color:#fff;border-color:#ccc}.btn-default.active,.btn-default:active,.btn-default:focus,.btn-default:hover,.open>.dropdown-toggle.btn-default{color:#333;background-color:#e6e6e6;border-color:#adadad}.btn.active,.btn:active{background-image:none;outline:0;-webkit-box-shadow:inset 0 3px 5px rgba(0,0,0,.125);box-shadow:inset 0 3px 5px rgba(0,0,0,.125)}.btn.active:focus,.btn:active:focus,.btn:focus{outline:5px auto 0;outline-offset:-2px}.btn-default.active,.btn-default:active,.open>.dropdown-toggle.btn-default{background-image:none}.pad2{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;padding:20px}.heading{background:#fff;border-bottom:1px solid #eee;min-height:70px;line-height:70px;background-color:#353535;color:#fff;padding:0 10px}.sidebar h2{font-size:22px;font-weight:400;line-height:20px;margin:0;padding:25px 2px}a{color:#404040;text-decoration:none}a:hover{color:#101010}.sidebar .listings{min-width:300px}.listings{height:100%;overflow:auto;padding-bottom:60px}.listings .item{display:block;border-bottom:1px solid #eee;text-decoration:none;padding:10px}.listings .item:last-child{border-bottom:none}.listings .item .title{display:block;color:#4d9de0;font-weight:700}.listings .item .title small{font-weight:400}.listings .item .title:hover,.listings .item.activeList .title{color:#8cc63f}.listings .item.activeList{background-color:#f8f8f8}::-webkit-scrollbar{width:3px;height:3px;border-left:0;background:rgba(0,0,0,.1)}::-webkit-scrollbar-track{background:0 0}::-webkit-scrollbar-thumb{background:#4d9de0;border-radius:0}.clearfix{display:block}.clearfix::after{content:'.';display:block;height:0;clear:both;visibility:hidden}.mapboxgl-popup{padding-bottom:50px}.mapboxgl-popup-close-button{margin-top:-10px;color:#fff}.mapboxgl-popup-content{font:400 15px/22px 'Source Sans Pro','Helvetica Neue',Sans-serif;width:250px;max-height:350px;padding:0}.mapboxgl-popup-content-wrapper{padding:1%}.mapboxgl-popup-content h3{background:#4d9de0;color:#fff;display:block;border-radius:3px 3px 0 0;font-weight:700;margin:-15px 0 0;padding:10px}.mapboxgl-popup-content h4{display:block;font-weight:400;margin:0;padding:10px}.mapboxgl-popup-content div{padding:10px}.mapboxgl-container .leaflet-marker-icon{cursor:pointer}.mapboxgl-popup-anchor-top>.mapboxgl-popup-content{margin-top:15px}.mapboxgl-popup-anchor-top>.mapboxgl-popup-tip{border-bottom-color:#4d9de0}#main{position:relative;transition:margin-left .5s;height:100%}#main.active{margin-left:30%}#sidebar.active{width:30%}#selectMenu{z-index:3;position:absolute;bottom:0;left:0;cursor:pointer}.sidebar{height:100%;width:0;position:fixed;z-index:2;top:0;left:0;overflow-x:hidden;transition:.5s;background:#fff}.cmn-toggle-switch{display:block;position:absolute;top:10px;left:10px;overflow:hidden;width:50px;height:50px;font-size:0;text-indent:-9999px;-webkit-appearance:none;-moz-appearance:none;appearance:none;box-shadow:none;border-radius:none;border:none;cursor:pointer;-webkit-transition:background .3s;transition:background .3s;z-index:3;margin:0;padding:0}.cmn-toggle-switch:focus{outline:0}.cmn-toggle-switch span{display:block;position:absolute;top:23px;left:10px;right:10px;height:4px;background:#fff}.cmn-toggle-switch span::after,.cmn-toggle-switch span::before{position:absolute;display:block;left:0;width:100%;height:4px;background-color:#fff;content:""}.cmn-toggle-switch span::before{top:-10px}.cmn-toggle-switch span::after{bottom:-10px}.cmn-toggle-switch__htx{background-color:#353535}.cmn-toggle-switch__htx span{-webkit-transition:background 0 .3s;transition:background 0 .3s}.cmn-toggle-switch__htx span::after,.cmn-toggle-switch__htx span::before{-webkit-transition-duration:.3s .3s;transition-duration:.3s .3s;-webkit-transition-delay:.3s 0;transition-delay:.3s 0}.cmn-toggle-switch__htx span::before{-webkit-transition-property:top,0;transition-property:top,transform}.cmn-toggle-switch__htx span::after{-webkit-transition-property:bottom,0;transition-property:bottom,transform}.cmn-toggle-switch__htx.active{background-color:#000}.cmn-toggle-switch__htx.active span{background:0 0}.cmn-toggle-switch__htx.active span::before{top:0;-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.cmn-toggle-switch__htx.active span::after{bottom:0;-webkit-transform:rotate(-45deg);-ms-transform:rotate(-45deg);transform:rotate(-45deg)}.cmn-toggle-switch__htx.active span::after,.cmn-toggle-switch__htx.active span::before{-webkit-transition-delay:0 .3s;transition-delay:0 .3s}.map-overlay{padding:10px}.map-overlay .map-overlay-inner{background-color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.4);border-radius:3px;margin-bottom:10px;padding:20px}.map-overlay-inner fieldset{border:none;margin:0 0 25px;padding:0}.map-overlay-inner fieldset:last-child{margin:0}.map-overlay-inner select{width:100%}.map-overlay-inner label{display:block;font-weight:700;margin:0 0 5px}.map-overlay-inner button{display:inline-block;width:36px;height:20px;border:none;cursor:pointer}.map-overlay-inner button:focus{outline:0}.map-overlay-inner button:hover{box-shadow:inset 0 0 0 3px rgba(0,0,0,.1)}.map-overlay-inner button{width:35px;margin:4px;height:35px}#swatches{max-width:220px;margin:0 auto;text-align:center}.panel{min-width:300px;margin:0 auto}.slider-arrow{padding:7px;width:10px;float:left;background:#fff;color:#000;text-decoration:none;position:absolute;left:0;bottom:40px;z-index:1}.sidebar{height:100%;display:flex;flex-direction:column}.sidebar-header{flex:0 0 auto;background-color:#dcdcdc}.sidebar-content{flex:1 1 auto;position:relative;overflow-y:auto}.sidebar-footer{flex:0 0 auto;background-color:#dcdcdc}.filter-group{background:#fff;position:absolute;bottom:40px;left:10px;z-index:1;border-radius:4px;width:120px;-moz-box-shadow:0 0 2px rgba(0,0,0,.1);-webkit-box-shadow:0 0 2px rgba(0,0,0,.1);box-shadow:0 0 0 2px rgba(0,0,0,.1)}.filter-group input[type=checkbox]:first-child+label{border-radius:4px 4px 0 0}.filter-group label:last-child{border-radius:0 0 4px 4px;border:none}.filter-group input[type=checkbox]{display:none}.filter-group input[type=checkbox]+label{background-color:#fff;color:#fff;display:block;cursor:pointer;padding:10px;border-bottom:1px solid rgba(256,256,256,.25)}.filter-group input[type=checkbox]+label{background-color:#fff;color:#fff;text-transform:capitalize}.filter-group input[type=checkbox]+label:hover,.filter-group input[type=checkbox]:checked+label{background-color:#4ea0da;color:#fff}.filter-group input[type=checkbox]:checked+label:before{content:'✔';margin-right:5px}.filter-group input[type=checkbox].filter-friends+label{background-color:#266093}.filter-group input[type=checkbox].filter-regional+label{background-color:#f03b20}#slider{width:100%}@media screen and max-width 767px{#main.active{margin-left:80%}#sidebar.active{width:80%}.sidebar h2{font-size:26px}.sidebar a{font-size:14px}}
 </style>
 </head>
 <body>
@@ -64,6 +64,7 @@ body{-webkit-font-smoothing:antialiased;font:400 15px/22px Heebo,'Helvetica Neue
     </nav>
 </div>
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="crossorigin="anonymous"></script>
+
 <script>
 // Mapstuff
 mapboxgl.accessToken = 'pk.eyJ1Ijoia2Vud29vZG1hcHMiLCJhIjoiY2o2czZxMjg2MDEyNTJ3cGRqM2FvdHc4diJ9.TP8cfPrAE_oKWDPIY_Mvaw';
@@ -115,17 +116,15 @@ map.on('load', function() {
     },firstSymbolId);
 
     slider.addEventListener('input', function(e) {
-        // Adjust the layers opacity. layer here is arbitrary - this could
-        // be another layer name found in your style or a custom layer
-        // added on the fly using `addSource`.
+        // Adjust the layers opacity. layer here is arbitrary
         map.setPaintProperty('locations', 'fill-opacity', parseInt(e.target.value, 10) / 100);
 
         // Value indicator
         sliderValue.textContent = e.target.value + '%';
     });
 
-    // Initialize the list
     buildLocationList(data);
+	
     });
     //TODO: Start with one toggled
     // Example code to toggle layers https://bl.ocks.org/tristen/f0a25ab9ed2c6644cd1df8eda9e13b3f
@@ -148,14 +147,13 @@ map.on('mouseleave', 'locations', function() {
 map.on('click', 'locations', function(e) {
 
     // Debug to display data
-    var features = map.queryRenderedFeatures(e.point);
-    console.log(features[0].geometry) 
+    //var features = map.queryRenderedFeatures(e.point);
+    //console.log(features[0].geometry) 
+	
 	
     new mapboxgl.Popup()
         .setLngLat(e.lngLat)
-        .setHTML('<h3>Locations</h3><div id="listings" class="listings">' + e.features.map(function(feature) {
-            return '<div class="item" id="' + feature.properties.FRIENDS_ID + '">' + feature.properties.SiteNAME + ' <a href="javascript:void(0);" class="btn btn-default btn-arrow pull-right" onclick="toggle_visibility(\'friend-' + feature.properties.FRIENDS_ID + '\');"><i class="fas fa-chevron-down"></i></a><div id="friend-' + feature.properties.FRIENDS_ID + '" style="display:none;"><i class="fas fa-phone-square"></i> ' + feature.properties.phone + '<br><i class="fas fa-globe"></i> <a href="' + feature.properties.website + '">View website</a> <br>' + feature.properties.About_us + '</div></div>';
-        }).join('') + '</div>')
+        .setHTML('<h3>Locations</h3><div id="listings" class="listings">' + e.features.map(function(feature) { return '<div class="item" id="' + feature.properties.FRIENDS_ID + '">' + feature.properties.SiteNAME + ' <a href="javascript:void(0);" class="btn btn-default btn-arrow pull-right" onclick="toggle_visibility(\'friend-' + feature.properties.FRIENDS_ID + '\');"><i class="fas fa-chevron-down"></i></a><div id="friend-' + feature.properties.FRIENDS_ID + '" style="display:none;"><i class="fas fa-phone-square"></i> ' + feature.properties.phone + '<br><i class="fas fa-globe"></i> <a href="' + feature.properties.website + '">View website</a> <br>' + feature.properties.About_us + '</div></div>'; }).join('') + '</div>')
         .addTo(map);
     map.flyTo({
         center: e.lngLat
@@ -164,7 +162,7 @@ map.on('click', 'locations', function(e) {
 
 });
 
-// Allow user to change colros of layers
+// Allow user to change colors of layers
 var swatches = document.getElementById('swatches');
 var layer = document.getElementById('layer');
 var colors = [
@@ -189,8 +187,36 @@ colors.forEach(function(color) {
     swatches.appendChild(swatch);
 });
 
+// Move viewport to center & zoom in
+function flyToStore(currentFeature) {
 
-  
+	// TODO: Use Bounds to zoom in on the area, similar to: https://docs.mapbox.com/mapbox-gl-js/example/zoomto-linestring/ 
+	//console.log(currentFeature.geometry.coordinates);
+    var coordinates = currentFeature.geometry.coordinates[0][0].slice();
+	//console.log(coordinates);
+      
+	map.flyTo({
+		center: coordinates
+		//zoom: 15
+	});
+	return false;
+  }
+
+// Display the popup
+function createPopUp(currentFeature) {
+      var popUps = document.getElementsByClassName('mapboxgl-popup');
+      if (popUps[0]) popUps[0].remove();
+		
+		var coordinates = currentFeature.geometry.coordinates[0][0].slice();
+		var popup = new mapboxgl.Popup({
+              closeButton: true, closeOnClick: false
+          })
+          .setLngLat(coordinates)
+          .setHTML('<h3>' + currentFeature.properties.city + '</h3>' +
+              '<h4>' + currentFeature.properties.address + '</h4>')
+          .addTo(map);
+}
+
 function buildLocationList(data) {
     // Iterate through the list of locationsLayer
     for (i = 0; i < data.features.length; i++) {
@@ -208,7 +234,7 @@ function buildLocationList(data) {
         // Create a new link with the class 'title' for each store
         // and fill it with the store SiteNAME
         var link = listing.appendChild(document.createElement('a'));
-        link.href = '#';
+        link.href = 'javascript:void(0);';
         link.className = 'title';
         link.dataPosition = i;
         link.innerHTML = prop.SiteNAME;
@@ -233,40 +259,17 @@ function buildLocationList(data) {
               createPopUp(clickedListing);
 
               // 3. Highlight listing in sidebar (and remove highlight for all other listings)
-              var activeItem = document.getElementsByClassName('active');
+              var activeItem = document.getElementsByClassName('activeList');
 
               if (activeItem[0]) {
-                  activeItem[0].classList.remove('active');
+                  activeItem[0].classList.remove('activeList');
               }
-              this.parentNode.classList.add('active');
+              this.parentNode.classList.add('activeList');
 
           });
     }
 }
 
-// Move viewport to center & zoom in
-function flyToStore(currentFeature) {
-      map.flyTo({
-          center: currentFeature.lngLat
-          //zoom: 15
-      });
-  }
-
-// Display the popup
-function createPopUp(currentFeature) {
-      var popUps = document.getElementsByClassName('mapboxgl-popup');
-      if (popUps[0]) popUps[0].remove();
-
-      var popup = new mapboxgl.Popup({
-              closeButton: true, closeOnClick: false
-          })
-          .setLngLat(currentFeature.geometry.coordinates)
-          .setHTML('<h3>' + currentFeature.properties.city + '</h3>' +
-              '<h4>' + currentFeature.properties.address + '</h4>')
-          .addTo(map);
-}
-
-  
 // Add geolocate control to the map.
 map.addControl(new mapboxgl.GeolocateControl({
     positionOptions: {
@@ -307,7 +310,7 @@ jQuery(document).ready(function($) {
             $(".cmn-toggle-switch").removeClass("active");
         } else {
             // $("#main").addClass("active");
-            //$("#sidebar").addClass("active");
+            // $("#sidebar").addClass("active");
             //$(".cmn-toggle-switch").addClass("active");
         }
     });
@@ -319,12 +322,11 @@ jQuery(document).ready(function($) {
         var filter = $(this).data('filter');
         $(this).addClass('active').siblings().removeClass('active');
         myLayer.setFilter(function(f) {
-
+             
             return (filter === 'GroupTYPE') ? true : f.properties[filter] === true;
         });
         return false;
     });
-
 
 });
 </script>
