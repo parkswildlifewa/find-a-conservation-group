@@ -581,10 +581,9 @@ a:hover{
 mapboxgl.accessToken = 'pk.eyJ1Ijoia2Vud29vZG1hcHMiLCJhIjoiY2o2czZxMjg2MDEyNTJ3cGRqM2FvdHc4diJ9.TP8cfPrAE_oKWDPIY_Mvaw';
 
 var locationsLayer = "https://raw.githubusercontent.com/parkswildlifewa/find-a-conservation-group/master/friends.geojson";
-
 var slider = document.getElementById('slider');
 var sliderValue = document.getElementById('slider-value');
-
+var popUps = document.getElementsByClassName('mapboxgl-popup');
 var map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v9',
@@ -661,6 +660,8 @@ map.on('click', 'locations', function(e) {
     //var features = map.queryRenderedFeatures(e.point);
     //console.log(features[0].geometry) 
 	
+	if (popUps[0]) popUps[0].remove();
+	
     new mapboxgl.Popup()
         .setLngLat(e.lngLat)
         .setHTML('<h3>Locations</h3><div class="listings">' + e.features.map(function(feature) { return '<div class="item" id="' + feature.properties.FRIENDS_ID + '">' + feature.properties.SiteNAME + ' <a href="javascript:void(0);" class="btn btn-default btn-arrow pull-right" onclick="toggle_visibility(\'friend-' + feature.properties.FRIENDS_ID + '\');"><i class="fas fa-chevron-down"></i></a><div class="popupInfo" id="friend-' + feature.properties.FRIENDS_ID + '" style="display:none;"><i class="fas fa-phone-square"></i> ' + feature.properties.phone + '<br><i class="fas fa-globe"></i> <a href="' + feature.properties.website + '">View website</a> <br>' + feature.properties.About_us + '</div></div>'; }).join('') + '</div>')
@@ -703,7 +704,6 @@ function locationInfo(currentFeature) {
 
 	$('#listing-moreInfo').html('<h4>About ' + currentFeature.properties.SiteNAME + '</h4><p>' + currentFeature.properties.About_us + '</p>');
 	
-
 }
 
 // Move viewport to center & zoom in
@@ -725,16 +725,16 @@ function flyToStore(currentFeature) {
 
 // Display the popup
 function createPopUp(currentFeature) {
-      var popUps = document.getElementsByClassName('mapboxgl-popup');
-      if (popUps[0]) popUps[0].remove();
+
+	if (popUps[0]) popUps[0].remove();
 		
-		var coordinates = currentFeature.geometry.coordinates[0][0].slice();
-		var popup = new mapboxgl.Popup({
-              closeButton: true, closeOnClick: false
-          })
-          .setLngLat(coordinates)
-          .setHTML('<h3>' + currentFeature.properties.SiteNAME + '</h3>' + '<div class="listings"><i class="fas fa-phone-square"></i> ' + currentFeature.properties.phone + '<br><i class="fas fa-globe"></i> <a href="' + currentFeature.properties.website + '">View website</a></div>')
-          .addTo(map);
+	var coordinates = currentFeature.geometry.coordinates[0][0].slice();
+	var popup = new mapboxgl.Popup({
+		closeButton: true, closeOnClick: false
+	})
+	.setLngLat(coordinates)
+	.setHTML('<h3>' + currentFeature.properties.SiteNAME + '</h3>' + '<div class="listings"><i class="fas fa-phone-square"></i> ' + currentFeature.properties.phone + '<br><i class="fas fa-globe"></i> <a href="' + currentFeature.properties.website + '">View website</a></div>')
+	.addTo(map);
 }
 
 function buildLocationList(data) {
