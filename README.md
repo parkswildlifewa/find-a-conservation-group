@@ -10,7 +10,8 @@ Uses external GeoJson
 
 TODO:
 - Toggle layers (Example code to toggle layers https://bl.ocks.org/tristen/f0a25ab9ed2c6644cd1df8eda9e13b3f)
-- Click on sidebar list item, center on that spot and open window
+- Click on sidebar list item, center on that spot and open popup window 
+- Review "About us" information display (consider UX)
 
 Example:
 See sample of this app on Codepen
