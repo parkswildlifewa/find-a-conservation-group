@@ -663,7 +663,7 @@ map.on('click', 'locations', function(e) {
 	
     new mapboxgl.Popup()
         .setLngLat(e.lngLat)
-        .setHTML('<h3>Locations</h3><div id="listings" class="listings">' + e.features.map(function(feature) { return '<div class="item" id="' + feature.properties.FRIENDS_ID + '">' + feature.properties.SiteNAME + ' <a href="javascript:void(0);" class="btn btn-default btn-arrow pull-right" onclick="toggle_visibility(\'friend-' + feature.properties.FRIENDS_ID + '\');"><i class="fas fa-chevron-down"></i></a><div class="popupInfo" id="friend-' + feature.properties.FRIENDS_ID + '" style="display:none;"><i class="fas fa-phone-square"></i> ' + feature.properties.phone + '<br><i class="fas fa-globe"></i> <a href="' + feature.properties.website + '">View website</a> <br>' + feature.properties.About_us + '</div></div>'; }).join('') + '</div>')
+        .setHTML('<h3>Locations</h3><div class="listings">' + e.features.map(function(feature) { return '<div class="item" id="' + feature.properties.FRIENDS_ID + '">' + feature.properties.SiteNAME + ' <a href="javascript:void(0);" class="btn btn-default btn-arrow pull-right" onclick="toggle_visibility(\'friend-' + feature.properties.FRIENDS_ID + '\');"><i class="fas fa-chevron-down"></i></a><div class="popupInfo" id="friend-' + feature.properties.FRIENDS_ID + '" style="display:none;"><i class="fas fa-phone-square"></i> ' + feature.properties.phone + '<br><i class="fas fa-globe"></i> <a href="' + feature.properties.website + '">View website</a> <br>' + feature.properties.About_us + '</div></div>'; }).join('') + '</div>')
         .addTo(map);
     map.flyTo({
         center: e.lngLat
@@ -701,7 +701,8 @@ colors.forEach(function(color) {
 // Add location "About us" details to the sidebar
 function locationInfo(currentFeature) {
 
-	$('#listing-moreInfo').html(currentFeature.properties.About_us);
+	$('#listing-moreInfo').html('<h4>About ' + currentFeature.properties.SiteNAME + '</h4><p>' + currentFeature.properties.About_us + '</p>');
+	
 
 }
 
@@ -732,8 +733,7 @@ function createPopUp(currentFeature) {
               closeButton: true, closeOnClick: false
           })
           .setLngLat(coordinates)
-          .setHTML('<h3>' + currentFeature.properties.city + '</h3>' +
-              '<h4>' + currentFeature.properties.address + '</h4>')
+          .setHTML('<h3>' + currentFeature.properties.SiteNAME + '</h3>' + '<div class="listings"><i class="fas fa-phone-square"></i> ' + currentFeature.properties.phone + '<br><i class="fas fa-globe"></i> <a href="' + currentFeature.properties.website + '">View website</a></div>')
           .addTo(map);
 }
 
