@@ -10,7 +10,7 @@ Uses external GeoJson
 
 TODO:
 - Toggle layers (Example code to toggle layers https://bl.ocks.org/tristen/f0a25ab9ed2c6644cd1df8eda9e13b3f)
-- Click on sidebar list item, center on that spot and open popup window 
+- Better management of GeoJSON data (currently reading a static file)
 - Review "About us" information display (consider UX)
 
 Example:
