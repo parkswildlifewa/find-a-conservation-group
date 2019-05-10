@@ -590,6 +590,9 @@ var map = new mapboxgl.Map({
     center: [118.738217, -30.518498],
     zoom: 5.5
 });
+//Added line for filtering friends and regional
+var filterGroup = document.getElementById('filters')
+console.log('____' +filterGroup)
 
 map.on('load', function() {
 	
@@ -639,8 +642,13 @@ map.on('load', function() {
     //TODO: Start with one toggled
     // Example code to toggle layers https://bl.ocks.org/tristen/f0a25ab9ed2c6644cd1df8eda9e13b3f
     //map.setFilter('locations', ['==', 'GroupTYPE', 'Regional']);
-
+	
+	console.log('---' +firstSymbolId)
+	
 });
+	
+	// disable map rotation using right click + drag
+map.dragRotate.disable();
 
 // Change the cursor to a pointer when the mouse is over the states layer.
 map.on('mouseenter', 'locations', function() {
@@ -713,14 +721,23 @@ function flyToStore(currentFeature) {
 	// https://docs.mapbox.com/mapbox-gl-js/example/zoomto-linestring/ 
 	// https://stackoverflow.com/questions/35586360/mapbox-gl-js-getbounds-fitbounds
 	//console.log(currentFeature.geometry.coordinates);
-    var coordinates = currentFeature.geometry.coordinates[0][0].slice();
+    var coordinates = currentFeature.geometry.coordinates[0].slice();
 	//console.log(coordinates);
       
-	map.flyTo({
-		center: coordinates
-		//zoom: 15
+	var bounds = coordinates.reduce(function(bounds, coord) {
+	return bounds.extend(coord);
+	}, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+ 
+	map.fitBounds(bounds, {
+	padding: 20
 	});
-	return false;
+	
+	
+	//map.flyTo({
+	//	center: coordinates,
+	//	zoom: 15
+	//});
+	//return false;
   }
 
 // Display the popup
@@ -766,11 +783,17 @@ function buildLocationList(data) {
         if (prop.phone) {
             details.innerHTML += ' · ' + prop.phone;
         }
-		
+
 		//TODO: Get sidebar links to center on map and open
 		link.addEventListener('click', function(e) {
          // Update the currentFeature to the store associated with the clicked link
               var clickedListing = data.features[this.dataPosition];
+	
+		// Center the map on the coordinates of any clicked symbol from the 'symbols' layer.
+		// still needs a little finetuning
+		map.on( 'locations', function (e) {
+		map.flyTo({center: e.features[0].geometry.coordinates});
+		});
 			  
               // 1. Fly to the point
               flyToStore(clickedListing);
@@ -842,15 +865,23 @@ jQuery(document).ready(function($) {
 	
     // Need to fix filter to show or hide layers
     // Example: https://docs.mapbox.com/mapbox-gl-js/example/filter-markers/ 
-    $('#filters input[type="checkbox"] ').on('click', function() {
+   
+ $('#filters input[type="checkbox"] ').on('click', function() {
 
         var filter = $(this).data('filter');
+        console.log('++++++' + filter)
         $(this).addClass('active').siblings().removeClass('active');
-        myLayer.setFilter(function(f) {
-             
-            return (filter === 'GroupTYPE') ? true : f.properties[filter] === true;
-        });
-        return false;
+
+	filter.addEventListener('change', function(e){
+	map.setLayoutProperty(firstSymbolId, 'visibility',
+	e.target.checked ? 'visible' : 'none');
+	}); 	
+	
+        //myLayer.setFilter(function(f) {
+    
+        //    return (filter === 'GroupTYPE') ? true : f.properties[filter] === true;
+        //});
+        //return false;
     });
 
 });
