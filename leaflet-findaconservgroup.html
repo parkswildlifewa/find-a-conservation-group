@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title> Overlapping features </title>
+        <title>Find a Conservation Group</title>
 
                 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
         integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
@@ -40,25 +40,27 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
         <script>
-
+    //Variable used to store all the features present in a particular point
     var selected_features = null;
+    
     var typeselected = "";
     var selected = "";
+
+    //Styles for the friends and regional layers
     var friendsStyle = {
         color: "red",
         fillcolor: "#ff0000",
-        weight: 2,
-        
+        weight: 2,       
         fillOpacity: 0.1
-
         };
     var regionalStyle = {
         color: "blue",
         fillcolor: "#0000ff",
-        weight: 2,
-        
+        weight: 2,       
         fillOpacity: 0.1
         };
+
+    // Setting up the map
 
     var map = L.map('map').setView([-32.010405, 115.903015 ],9);
 	//var friends= 'https://kmi.dbca.wa.gov.au/geoserver/public/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=public:friends_groups_may_2019&outputFormat=application%2Fjson';
@@ -107,6 +109,7 @@
         filter: regionalfilter
     }).addTo(map);
 
+    //Empty layer group to hold the friends and regional layer, used to create the toggle functionality
     alllayer = L.layerGroup([friendslayer, regionallayer]);
 
     alllayer.addTo(map);
@@ -126,8 +129,11 @@
     collapsed: false
     }).addTo(map);
 
+    // The click function used to find the features in a point, load popups and zoom-in and highlight selected feature
     function handleClick(e) {
     var html = '' ;
+
+    //Determine which layers are selected in toggle friend,regional or both and displaying features in the point based on layers.
         if(map.hasLayer(friendslayer) && map.hasLayer(regionallayer)){
             selected_features = leafletPip.pointInLayer(e.latlng,friendslayer,false) 
             selected_features = selected_features.concat(leafletPip.pointInLayer(e.latlng,regionallayer,false))
@@ -139,6 +145,7 @@
             selected_features = "";
         } 
 
+    //Generate the relevant popups
         if (selected_features.length) {
              for (var i = 0; i < selected_features.length; i++)  { 
                  featureid = selected_features[i].feature.properties.fid;
@@ -180,7 +187,7 @@
 
     map.on('click',handleClick);
 
-
+// Used to display the location titles above the layers,i.e Mandurah text visible above the layer
 	var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
         attribution: '©OpenStreetMap, ©CartoDB'
     }).addTo(map);
@@ -193,6 +200,7 @@
 }
 }).error(function() {});
 
+//Function used to zoom into the feature,highlight it and reset previously selected feature
 function zoomToFeature(feat) {
     //var featureid = document.getElementById("zoomIn").value;
     map.closePopup();
