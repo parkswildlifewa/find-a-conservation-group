@@ -146,7 +146,8 @@
         } 
 
     //Generate the relevant popups
-        if (selected_features.length) {
+        if (selected_features.length)
+         {
              for (var i = 0; i < selected_features.length; i++)  { 
                  featureid = selected_features[i].feature.properties.fid;
                
@@ -207,7 +208,7 @@ function zoomToFeature(feat) {
     map.fitBounds(feat.getBounds());
 
     if (selected) {
-        console.log(feat)
+       // console.log(feat)
         resethighlightStyle()
     }
     selected = feat;
