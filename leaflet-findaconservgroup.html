@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Overlapping features </title>
+
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+
+        <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
+            <link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+
+        <!-- Make sure you put this AFTER Leaflet's CSS -->
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+        integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+
+        <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js'></script>
+
+        <!-- <script src = "http://geographicinformationsolutions.ca/leafletWork/histMapLim.js"></script> -->
+        <!-- <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-pip/v0.0.2/leaflet-pip.js'></script> -->
+        <script src='https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js'></script>
+
+        <style>
+            #map {
+			/* width: 800px; */
+			height: 800px;
+		}
+            .leaflet-popup-content {
+                max-width: 300px;
+                height: 300px;
+                overflow-y: scroll;
+            }
+
+        </style>
+    </head>
+    <body>
+
+        <div id="map"></div>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+        <script>
+
+    var selected_features = null;
+    var typeselected = "";
+    var selected = "";
+    var friendsStyle = {
+        color: "red",
+        fillcolor: "#ff0000",
+        weight: 2,
+        
+        fillOpacity: 0.1
+
+        };
+    var regionalStyle = {
+        color: "blue",
+        fillcolor: "#0000ff",
+        weight: 2,
+        
+        fillOpacity: 0.1
+        };
+
+    var map = L.map('map').setView([-32.010405, 115.903015 ],9);
+	//var friends= 'https://kmi.dbca.wa.gov.au/geoserver/public/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=public:friends_groups_may_2019&outputFormat=application%2Fjson';
+
+	var streets= L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoibWJha2hyYXliYSIsImEiOiJjanZldmpjcmUybmljNGVzMXpxNGxkbmw5In0.sNObGJvqNXa7C27fmxsm_Q'
+	}).addTo(map);
+
+	//var marker = L.marker([51.5, -0.09]).addTo(mymap);
+
+	map.createPane('labels');
+	map.getPane('labels').style.zIndex = 650;
+	map.getPane('labels').style.pointerEvents = 'none';
+
+    var friends = [];
+       
+    $.ajax({
+    dataType: "json",
+    url: 'https://kmi.dbca.wa.gov.au/geoserver/public/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=public:friends_regional_groups_may_2019&outputFormat=application%2Fjson',
+    
+    success: function(data) {
+        $(data.features).each(function(key, data) {
+        friends.push(data);
+    });
+	var categories = {},type;
+	
+    var featureid = []
+
+    function friendsfilter(feature){
+        return feature.properties.type === 'friends' ;
+    }
+    function regionalfilter(feature){
+        return feature.properties.type === 'regional' ;
+    }
+
+    friendslayer = L.geoJSON(friends, { 
+        style : friendsStyle,
+        filter: friendsfilter
+    }).addTo(map);
+
+    regionallayer = L.geoJSON(friends, { 
+        style : regionalStyle,
+        filter: regionalfilter
+    }).addTo(map);
+
+    alllayer = L.layerGroup([friendslayer, regionallayer]);
+
+    alllayer.addTo(map);
+    // friendslayer.addTo(map);
+    // regionallayer.addTo(map);
+
+    var baseLayers = {
+		"Streets": streets
+	};
+
+	var overlaysObj = {"Friends" : friendslayer , 
+                        "Regional" : regionallayer,
+                        };
+	
+
+    var control = L.control.layers(baseLayers, overlaysObj, {
+    collapsed: false
+    }).addTo(map);
+
+    function handleClick(e) {
+    var html = '' ;
+        if(map.hasLayer(friendslayer) && map.hasLayer(regionallayer)){
+            selected_features = leafletPip.pointInLayer(e.latlng,friendslayer,false) 
+            selected_features = selected_features.concat(leafletPip.pointInLayer(e.latlng,regionallayer,false))
+        } else if(map.hasLayer(friendslayer)){
+                selected_features = leafletPip.pointInLayer(e.latlng,friendslayer,false);
+        } else if(map.hasLayer(regionallayer)){
+                selected_features = leafletPip.pointInLayer(e.latlng,regionallayer,false);
+        } else {
+            selected_features = "";
+        } 
+
+        if (selected_features.length) {
+             for (var i = 0; i < selected_features.length; i++)  { 
+                 featureid = selected_features[i].feature.properties.fid;
+               
+                (i === 0 )? html += "" : html += "<br>"+"_____" ;
+
+                html +=  "<br><a class='zoomIn' onclick='zoomToFeature(selected_features["+i+"])' >" + selected_features[i].feature.properties.org + "</a>" ;
+
+                         (selected_features[i].feature.properties.site) ? html += "<br><b>Site: </b>" + selected_features[i].feature.properties.site + ""  
+                         : html += "<br><b>Site: </b>" ; 
+                        
+                         (selected_features[i].feature.properties.contact) ?html+= "<br><b>Contact:</b> " + selected_features[i].feature.properties.contact + "" :
+                         html+= "<br><b>Contact:</b> ";
+
+                         (selected_features[i].feature.properties.p) ? html+="<br><b>P: </b>" + selected_features[i].feature.properties.p + "" : 
+                         html+="<br><b>P: </b>";
+
+                         (selected_features[i].feature.properties.e) ? html+="<br><b>E: </b><a href='mailto:"+ selected_features[i].feature.properties.e +"'> " + selected_features[i].feature.properties.e + "</a>" 
+                         : html+="<br><b>E: </b>";
+                         //"<br><b>E: </b>" + selected_features[i].feature.properties.e +
+                         (selected_features[i].feature.properties.w) ? html+="<br><b>W: </b><a href=" + selected_features[i].feature.properties.w +"> " + selected_features[i].feature.properties.w + "</a>" : 
+                         html+="<br><b>W: </b>";
+                         //"<br><b>W: </b>" + selected_features[i].feature.properties.w +
+                         (selected_features[i].feature.properties.f) ? html+="<br><b>F: </b><a href="+ selected_features[i].feature.properties.f + "> " + selected_features[i].feature.properties.f + "</a>" : 
+                         html+="<br><b>F: </b>";
+                         //"<br><b>F: </b>" + selected_features[i].feature.properties.f +
+                         (selected_features[i].feature.properties.about) ? html+="<br><b>About Us: </b> " + selected_features[i].feature.properties.about + "" : 
+                         html+="<br><b>About Us: </b>";
+                         //"<br><b>About Us: </b>" + selected_features[i].feature.properties.about ;
+						
+                        
+            }
+        }
+        
+    if (html) {
+        map.openPopup(html, e.latlng);
+    }
+}
+
+    map.on('click',handleClick);
+
+
+	var positron = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+        attribution: '©OpenStreetMap, ©CartoDB'
+    }).addTo(map);
+
+    var positronLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+        attribution: '©OpenStreetMap, ©CartoDB',
+        pane: 'labels'
+    }).addTo(map);
+
+}
+}).error(function() {});
+
+function zoomToFeature(feat) {
+    //var featureid = document.getElementById("zoomIn").value;
+    map.closePopup();
+    map.fitBounds(feat.getBounds());
+
+    if (selected) {
+        console.log(feat)
+        resethighlightStyle()
+    }
+    selected = feat;
+    feat.bringToFront();
+    feat.setStyle(highlight);
+}
+
+var resethighlightStyle = function(){
+    //var tempstyle = ""
+    layer1 = friendslayer;
+    layer2 = regionallayer;
+    layer1.setStyle(friendsStyle);
+    layer2.setStyle(regionalStyle);
+}
+
+var highlight = {
+    color: 'green',
+    //fillColor: 'green',
+    weight: 2,
+       //dashArray: '3',
+    fillOpacity: 0.7
+
+}
+        </script>
+    </body>
+</html>
