@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Find a Conservation Group</title>
+
+                <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+        integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+        crossorigin=""/>
+
+        <!-- Make sure you put this AFTER Leaflet's CSS -->
+        <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+        integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+        crossorigin=""></script>
+
+        <!-- <script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-pip/v0.0.2/leaflet-pip.js'></script> -->
+        <script src='https://unpkg.com/@mapbox/leaflet-pip@latest/leaflet-pip.js'></script>
+
+        <style>
+            #map {
+			/* width: 800px; */
+			height: 800px;
+		}
+            .leaflet-popup-content {
+                max-width: 300px;
+                height: 300px;
+                overflow-y: scroll;
+            }
+
+        </style>
+    </head>
+    <body>
+
+        <div id="map"></div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js" type="text/javascript"></script>
+
+        <script>
+    //Variable used to store all the features present in a particular point
+    var selected_features = null;
+    
+    var typeselected = "";
+    var selected = "";
+
+    //Styles for the friends and regional layers
+    var friendsStyle = {
+        color: "red",
+        fillcolor: "#ff0000",
+        weight: 2,       
+        fillOpacity: 0.1
+        };
+    var regionalStyle = {
+        color: "blue",
+        fillcolor: "#0000ff",
+        weight: 2,       
+        fillOpacity: 0.1
+        };
+
+    // Setting up the map
+
+    var map = L.map('map').setView([-32.010405, 115.903015 ],9);
+	//var friends= 'https://kmi.dbca.wa.gov.au/geoserver/public/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=public:friends_groups_may_2019&outputFormat=application%2Fjson';
+
+	var streets= L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="//creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="//www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets',
+    accessToken: 'pk.eyJ1IjoibWJha2hyYXliYSIsImEiOiJjanZldmpjcmUybmljNGVzMXpxNGxkbmw5In0.sNObGJvqNXa7C27fmxsm_Q'
+	}).addTo(map);
+
+	//var marker = L.marker([51.5, -0.09]).addTo(mymap);
+
+	map.createPane('labels');
+	map.getPane('labels').style.zIndex = 650;
+	map.getPane('labels').style.pointerEvents = 'none';
+
+    var friends = [];
+       
+    $.ajax({
+    dataType: "json",
+   // url: '//kmi.dbca.wa.gov.au/geoserver/public/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=public:friends_regional_groups_may_2019&outputFormat=application%2Fjson',
+   url: 'https://dservices3.arcgis.com/lSP3CnkTXxMmSpdI/arcgis/services/Friends_Of_Groups_WFS/WFSServer?service=wfs&request=GetFeature&typeName=Friends_Of_Groups_WFS:FRIENDS_OF_GROUPS&srsName=EPSG:4326&outputFormat=geojson',
+
+    success: function(data) {
+        $(data.features).each(function(key, data) {
+        friends.push(data);
+    });
+	var categories = {},GROUPTYPE;
+	
+    var featureid = []
+
+    function friendsfilter(feature){
+        return feature.properties.GROUPTYPE === 'Friends' ;
+    }
+    function regionalfilter(feature){
+        return feature.properties.GROUPTYPE === 'Regional' ;
+    }
+
+    friendslayer = L.geoJSON(friends, { 
+        style : friendsStyle,
+        filter: friendsfilter
+    }).addTo(map);
+
+    regionallayer = L.geoJSON(friends, { 
+        style : regionalStyle,
+        filter: regionalfilter
+    }).addTo(map);
+
+    //Empty layer group to hold the friends and regional layer, used to create the toggle functionality
+    alllayer = L.layerGroup([friendslayer, regionallayer]);
+
+    alllayer.addTo(map);
+    // friendslayer.addTo(map);
+    // regionallayer.addTo(map);
+
+    var baseLayers = {
+		"Streets": streets
+	};
+
+	var overlaysObj = {"Friends" : friendslayer , 
+                        "Regional" : regionallayer,
+                        };
+	
+
+    var control = L.control.layers(baseLayers, overlaysObj, {
+    collapsed: false
+    }).addTo(map);
+
+    // The click function used to find the features in a point, load popups and zoom-in and highlight selected feature
+    function handleClick(e) {
+    var html = '' ;
+
+    //Determine which layers are selected in toggle friend,regional or both and displaying features in the point based on layers.
+        if(map.hasLayer(friendslayer) && map.hasLayer(regionallayer)){
+            selected_features = leafletPip.pointInLayer(e.latlng,friendslayer,false) 
+            selected_features = selected_features.concat(leafletPip.pointInLayer(e.latlng,regionallayer,false))
+        } else if(map.hasLayer(friendslayer)){
+                selected_features = leafletPip.pointInLayer(e.latlng,friendslayer,false);
+        } else if(map.hasLayer(regionallayer)){
+                selected_features = leafletPip.pointInLayer(e.latlng,regionallayer,false);
+        } else {
+            selected_features = "";
+        } 
+
+    //Generate the relevant popups
+        if (selected_features.length)
+         {
+             for (var i = 0; i < selected_features.length; i++)  { 
+                 featureid = selected_features[i].feature.properties.FRIENDS_ID;
+               
+                (i === 0 )? html += "" : html += "<br>"+"_____" ;
+
+                html +=  "<br><a class='zoomIn' onclick='zoomToFeature(selected_features["+i+"])' >" + selected_features[i].feature.properties.ORG + "</a>" ;
+                        
+                        (selected_features[i].feature.properties.SITENAME == 'null') ?html+= "<br><b>Sitename:</b> " :
+                         html+= "<br><b>Sitename:</b> " + selected_features[i].feature.properties.SITENAME + "";
+
+                         (selected_features[i].feature.properties.CONTACT == 'null') ?html+= "<br><b>Contact:</b> " :
+                         html+= "<br><b>Contact:</b> " + selected_features[i].feature.properties.CONTACT + "";
+
+                         (selected_features[i].feature.properties.PHONE == 'null') ? html+="<br><b>P: </b>"  : 
+                         html+="<br><b>Phone: </b>" + selected_features[i].feature.properties.PHONE + "";
+
+                         (selected_features[i].feature.properties.EMAIL == 'null') ? html+="<br><b>E: </b>"  
+                         : html+="<br><b>Email: </b><a href='mailto:"+ selected_features[i].feature.properties.EMAIL +"'> " + selected_features[i].feature.properties.EMAIL + "</a>" ;
+                         //"<br><b>E: </b>" + selected_features[i].feature.properties.e +
+                         (selected_features[i].feature.properties.WEBSITE == 'null') ? html+="<br><b>W: </b>" : 
+                         html+="<br><b>Website: </b><a href=" + selected_features[i].feature.properties.WEBSITE +"> " + selected_features[i].feature.properties.WEBSITE + "</a>" ;
+                         //"<br><b>W: </b>" + selected_features[i].feature.properties.w +
+                         (selected_features[i].feature.properties.FACEBOOK == 'null') ? html+="<br><b>F: </b>" : 
+                         html+="<br><b>Facebook: </b><a href="+ selected_features[i].feature.properties.FACEBOOK + "> " + selected_features[i].feature.properties.FACEBOOK + "</a>" ;
+                         //"<br><b>F: </b>" + selected_features[i].feature.properties.f +
+                         (selected_features[i].feature.properties.ABOUT == 'null') ? html+="<br><b>About Us: </b>" : 
+                         html+="<br><b>About Us: </b> " + selected_features[i].feature.properties.ABOUT + "" ;
+                         //"<br><b>About Us: </b>" + selected_features[i].feature.properties.about ;
+						
+                        
+            }
+        }
+        
+    if (html) {
+        map.openPopup(html, e.latlng);
+    }
+}
+
+    map.on('click',handleClick);
+
+// Used to display the location titles above the layers,i.e Mandurah text visible above the layer
+	// var positron = L.tileLayer('//{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+    //     attribution: '©OpenStreetMap, ©CartoDB'
+    // }).addTo(map);
+
+    // var positronLabels = L.tileLayer('//{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+    //     attribution: '©OpenStreetMap, ©CartoDB',
+    //     pane: 'labels'
+    // }).addTo(map);
+
+},
+error:function() {}
+});
+
+//Function used to zoom into the feature,highlight it and reset previously selected feature
+function zoomToFeature(feat) {
+    //var featureid = document.getElementById("zoomIn").value;
+    map.closePopup();
+    map.fitBounds(feat.getBounds());
+
+    if (selected) {
+       // console.log(feat)
+        resethighlightStyle()
+    }
+    selected = feat;
+    feat.bringToFront();
+    feat.setStyle(highlight);
+}
+
+var resethighlightStyle = function(){
+    //var tempstyle = ""
+    layer1 = friendslayer;
+    layer2 = regionallayer;
+    layer1.setStyle(friendsStyle);
+    layer2.setStyle(regionalStyle);
+}
+
+var highlight = {
+    color: 'green',
+    //fillColor: 'green',
+    weight: 2,
+       //dashArray: '3',
+    fillOpacity: 0.7
+
+}
+        </script>
+    </body>
+</html>
