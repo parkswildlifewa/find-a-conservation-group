@@ -49,8 +49,8 @@
         fillOpacity: 0.1
         };
     var regionalStyle = {
-        color: "blue",
-        fillcolor: "#0000ff",
+        color: "yellow",
+        fillcolor: "#ffff80",
         weight: 2,       
         fillOpacity: 0.1
         };
@@ -64,7 +64,13 @@
     maxZoom: 18,
     id: 'mapbox.streets',
     accessToken: 'pk.eyJ1IjoiZHBhd2FzaSIsImEiOiJjazBxMm52MWYwM3g4M21sZDE1YnZucTUwIn0.L3u7hXJka8IKvRgJCSZgBw'
-	}).addTo(map);
+    }).addTo(map);
+    var satellite = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+	attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="//creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="//www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.satellite',
+    accessToken: 'pk.eyJ1IjoiZHBhd2FzaSIsImEiOiJjazBxMm52MWYwM3g4M21sZDE1YnZucTUwIn0.L3u7hXJka8IKvRgJCSZgBw'
+    }).addTo(map);
 
 	//var marker = L.marker([51.5, -0.09]).addTo(mymap);
 
@@ -73,6 +79,7 @@
 	map.getPane('labels').style.pointerEvents = 'none';
 
     var friends = [];
+
        
     $.ajax({
     dataType: "json",
@@ -112,13 +119,13 @@
     // regionallayer.addTo(map);
 
     var baseLayers = {
-		"Streets": streets
+        "Streets": streets,
+        "Satellite" : satellite,
 	};
 
 	var overlaysObj = {"Friends" : friendslayer , 
                         "Regional" : regionallayer,
                         };
-	
 
     var control = L.control.layers(baseLayers, overlaysObj, {
     collapsed: false
@@ -143,7 +150,12 @@
     //Generate the relevant popups
         if (selected_features.length)
          {
+
              for (var i = 0; i < selected_features.length; i++)  { 
+                 if(i == 0){
+
+                    html += '<button type="button" onclick="closeSelection()">Close Selection </button>';
+                 }
                  featureid = selected_features[i].feature.properties.FRIENDS_ID;
                
                 (i === 0 )? html += "" : html += "<br>"+"_____" ;
@@ -163,22 +175,29 @@
                          : html+="<br><b>Email: </b><a href='mailto:"+ selected_features[i].feature.properties.EMAIL +"'> " + selected_features[i].feature.properties.EMAIL + "</a>" ;
                          
                          (selected_features[i].feature.properties.WEBSITE == 'null') ? html+="<br><b>Website: </b>" : 
-                         html+="<br><b>Website: </b><a href=" + selected_features[i].feature.properties.WEBSITE +"> " + selected_features[i].feature.properties.WEBSITE + "</a>" ;
+                         html+="<br><b>Website: </b><a href=" + selected_features[i].feature.properties.WEBSITE +" target='_blank'> " + selected_features[i].feature.properties.WEBSITE + "</a>" ;
                          
                          (selected_features[i].feature.properties.FACEBOOK == 'null') ? html+="<br><b>Facebook: </b>" : 
-                         html+="<br><b>Facebook: </b><a href="+ selected_features[i].feature.properties.FACEBOOK + "> " + selected_features[i].feature.properties.FACEBOOK + "</a>" ;
+                         html+="<br><b>Facebook: </b><a href="+ selected_features[i].feature.properties.FACEBOOK + " target='_blank'> " + selected_features[i].feature.properties.FACEBOOK + "</a>" ;
                          //"<br><b>F: </b>" + selected_features[i].feature.properties.f +
                          (selected_features[i].feature.properties.ABOUT == 'null') ? html+="<br><b>About Us: </b>" : 
                          html+="<br><b>About Us: </b> " + selected_features[i].feature.properties.ABOUT + "" ;
                          //"<br><b>About Us: </b>" + selected_features[i].feature.properties.about ;
-						
+                        //  if (selected_features[i].options.color == highlight.color ){
+                            
+						// }
                         
             }
+            if (html) {
+                
+            map.openPopup(html, e.latlng);
+                
+        }
         }
         
-        if (html) {
-            map.openPopup(html, e.latlng);
-        }
+        // if (html) {
+        //     map.openPopup(html, e.latlng);
+        // }
     }
 
     map.on('click',handleClick);
@@ -190,17 +209,27 @@
 //Function used to zoom into the feature,highlight it and reset previously selected feature
 function zoomToFeature(feat) {
     //var featureid = document.getElementById("zoomIn").value;
-    map.closePopup();
+   // map.closePopup();
     map.fitBounds(feat.getBounds());
 
     if (selected) {
-       // console.log(feat)
+        console.log(feat)
         resethighlightStyle()
     }
+    $('#popup').on('click', resethighlightStyle())
     selected = feat;
     feat.bringToFront();
     feat.setStyle(highlight);
+
 }
+var closeSelection = function(){
+    resethighlightStyle(); 
+    map.closePopup();
+}
+
+// var resetmap = function(){
+//     resethighlightStyle(); map.zoomOut(), map.closePopup();
+// }
 
 var resethighlightStyle = function(){
     //var tempstyle = ""
